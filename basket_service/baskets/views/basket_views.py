@@ -5,73 +5,75 @@ from marshmallow import ValidationError, fields
 from sqlalchemy.exc import DataError, IntegrityError
 from webargs.flaskparser import parser
 
-from products import db
-from products.models.product import Product
-from products.serializers.product_schema import ProductSchema
+from baskets import db
+from baskets.models.basket import Basket
+from baskets.serializers.basket_schema import BasketSchema
 
 
-class ProductResource(Resource):
-    def get(self, product_id=None):
-        if not product_id:
+class BasketResource(Resource):
+
+    def get(self, basket_id=None):
+        if not basket_id:
             args = {
-                'type': fields.List(fields.Int())
+                'user_id': fields.Int(required=True),
+                'state': fields.Boolean()
             }
             try:
                 args = parser.parse(args, request)
             except HTTPException:
                 return {"error": "Invalid url"}, status.HTTP_400_BAD_REQUEST
-            products = Product.query.filter(Product.type.in_(args['type'])).all()
-            resp = ProductSchema(many=True).dump(obj=products)
+            baskets = Basket.query.filter(Basket.user_id == args['user_id']).filter(Basket.state == args['state']).all()
+            resp = BasketSchema(many=True).dump(obj=baskets)
             return resp, status.HTTP_200_OK
 
         try:
-            product = Product.query.get(product_id)
+            basket = Basket.query.get(basket_id)
         except DataError:
             return {"error": "Invalid url."}, status.HTTP_400_BAD_REQUEST
-        if product is None:
+        if basket is None:
             return {"error": "Does not exist."}, status.HTTP_400_BAD_REQUEST
-        product = ProductSchema().dump(obj=product)
-        return product, status.HTTP_200_OK
+        basket = BasketSchema().dump(obj=basket)
+        return basket, status.HTTP_200_OK
 
-    def put(self, product_id):
+    def put(self, basket_id):
         try:
-            product = Product.query.get(product_id)
+            basket = Basket.query.get(basket_id)
         except DataError:
             return {"error": "Invalid url."}, status.HTTP_400_BAD_REQUEST
-        if not product:
+        if not basket:
             return {"error": "Does not exist."}, status.HTTP_400_BAD_REQUEST
         try:
-            data = ProductSchema().load(request.json)
+            data = BasketSchema().load(request.json)
         except ValidationError as err:
             return err.messages, status.HTTP_400_BAD_REQUEST
         for key, value in data.items():
-            setattr(product, key, value)
+            setattr(basket, key, value)
         try:
             db.session.commit()
         except IntegrityError:
-            return {"error": "Type does not exist."}, status.HTTP_400_BAD_REQUEST
+            return {"error": "Wrong data."}, status.HTTP_400_BAD_REQUEST
         return Response(status=status.HTTP_200_OK)
 
-    def delete(self, product_id):
+    def delete(self, basket_id):
         try:
-            product = Product.query.get(product_id)
-        except DataError as err:
+            basket = Basket.query.get(basket_id)
+        except DataError:
             return {"error": "Invalid url."}, status.HTTP_400_BAD_REQUEST
-        if product is None:
+        if basket is None:
             return {"error": "Does not exist."}, status.HTTP_400_BAD_REQUEST
-        db.session.delete(product)
+        db.session.delete(basket)
         db.session.commit()
         return Response(status=status.HTTP_200_OK)
 
     def post(self):
         try:
-            data = ProductSchema().load(request.json)
+            data = BasketSchema().load(request.json)
         except ValidationError as err:
             return err.messages, status.HTTP_400_BAD_REQUEST
-        product = Product(**data)
-        db.session.add(product)
+        basket = Basket(**data)
+        db.session.add(basket)
         try:
             db.session.commit()
         except IntegrityError:
-            return {"error": "Type does not exist."}, status.HTTP_400_BAD_REQUEST
+            return {"error": "Wrong data."}, status.HTTP_400_BAD_REQUEST
         return Response(status=status.HTTP_200_OK)
