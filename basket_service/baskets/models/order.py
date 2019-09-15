@@ -1,12 +1,13 @@
 """Field model."""
-from sqlalchemy import Column, Integer, String, Float
-
+from sqlalchemy import Column, Integer, String, Float, DateTime
+import datetime
 from baskets import db
 
 
 class Order(db.Model):
     id = Column(Integer, primary_key=True)
-    product_id = Column(Integer)
     user_id = Column(Integer)
     products = Column(String(100))
-    total_price = price = Column(Float)
+    total_price = Column(Float)
+    date = Column(DateTime, default=datetime.datetime.now)
+    payment = Column(Integer)

@@ -12,7 +12,7 @@ app.config.from_object(DevelopmentConfig)
 db = SQLAlchemy(app)
 
 migrate = Migrate(app, db)
-# from baskets.models import basket, order
+from baskets.models import basket, order
 
 API = Api(app, catch_all_404s=True)
 CORS(app, supports_credentials=True)
