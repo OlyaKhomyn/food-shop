@@ -30,8 +30,8 @@ class ProductResource(Resource):
             return {"error": "Invalid url."}, status.HTTP_400_BAD_REQUEST
         if product is None:
             return {"error": "Does not exist."}, status.HTTP_400_BAD_REQUEST
-        field = ProductSchema().dump(obj=product)
-        return field, status.HTTP_200_OK
+        product = ProductSchema().dump(obj=product)
+        return product, status.HTTP_200_OK
 
     def put(self, product_id):
         try:
