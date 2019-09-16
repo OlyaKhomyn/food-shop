@@ -7,19 +7,33 @@ from webargs.flaskparser import parser
 
 from products import db
 from products.models.product import Product
-from products.serializers.product_schema import ProductSchema
+from products.serializers.product_schema import ProductSchema, ProductFromListSchema
 
 
 class ProductResource(Resource):
     def get(self, product_id=None):
         if not product_id:
             args = {
-                'type': fields.List(fields.Int())
+                'type': fields.List(fields.Int()),
+                'product_id': fields.List(fields.Int(validate=lambda val: val > 0))
             }
             try:
                 args = parser.parse(args, request)
             except HTTPException:
                 return {"error": "Invalid url"}, status.HTTP_400_BAD_REQUEST
+            if args.get('product_id', None):
+                products = []
+                for p_id in args['product_id']:
+                    element = Product.query.filter_by(id=p_id).first()
+                    if not element:
+                        resp = {"error": "Does not exist."}
+                        status_code = status.HTTP_400_BAD_REQUEST
+                        break
+                    products.append(element)
+                else:
+                    resp = ProductFromListSchema(many=True).dump(obj=products)
+                    status_code = status.HTTP_200_OK
+                return resp, status_code
             products = Product.query.filter(Product.type.in_(args['type'])).all()
             resp = ProductSchema(many=True).dump(obj=products)
             return resp, status.HTTP_200_OK

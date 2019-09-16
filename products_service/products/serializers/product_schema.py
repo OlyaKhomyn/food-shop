@@ -12,3 +12,14 @@ class ProductSchema(Schema):
     class Meta:
         """Meta class."""
         strict = True
+
+
+class ProductFromListSchema(Schema):
+    id = fields.Integer()
+    name = title = fields.String()
+    price = fields.Float()
+
+    class Meta:
+        """Meta class."""
+        strict = True
+

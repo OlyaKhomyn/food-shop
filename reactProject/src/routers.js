@@ -7,6 +7,7 @@ import Header from './components/header/header';
 import TypeList from './components/typeList/typeList'
 import ProductsList from './components/productsList/productsList'
 import ProductItem from './components/productItem/productItem'
+import BasketList from "./components/basketList/basketList";
 
 
 const Routers = () => {
@@ -18,7 +19,8 @@ const Routers = () => {
                     <Route path='/' exact component={Main}/>
                     <Route path='/catalog' exact component={TypeList} />
                     <Route path='/catalog/:id' exact component={ProductsList}/>
-                    <Route path='/:name' exact component={ProductItem}/>
+                    <Route path='/product/:name' exact component={ProductItem}/>
+                    <Route path='/basket' exact component={BasketList}/>
                 </Switch>
             </div>
         </BrowserRouter>
