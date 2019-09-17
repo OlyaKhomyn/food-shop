@@ -12,9 +12,11 @@ app.config.from_object(DevelopmentConfig)
 db = SQLAlchemy(app)
 
 migrate = Migrate(app, db)
-# from products.models import product, product_type
+from products.models import product, product_type
 
 API = Api(app, catch_all_404s=True)
 CORS(app, supports_credentials=True)
+# app.config['CORS_HEADERS'] = 'Content-Type'
+
 
 from products.views import resources

@@ -16,7 +16,7 @@ class BasketList extends Component {
     };
 
     getProducts = () => {
-        const ids = this.state.basket.map(el => el['id']);
+        const ids = this.state.basket.map(el => el['product_id']);
         axios.get('http://127.0.0.1:5000/product', {
             withCredentials:true,
             params: {

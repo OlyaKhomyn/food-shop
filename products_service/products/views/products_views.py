@@ -31,11 +31,11 @@ class ProductResource(Resource):
                         break
                     products.append(element)
                 else:
-                    resp = ProductFromListSchema(many=True).dump(obj=products)
+                    resp = ProductFromListSchema(many=True).dump(obj=products).data
                     status_code = status.HTTP_200_OK
                 return resp, status_code
             products = Product.query.filter(Product.type.in_(args['type'])).all()
-            resp = ProductSchema(many=True).dump(obj=products)
+            resp = ProductSchema(many=True).dump(obj=products).data
             return resp, status.HTTP_200_OK
 
         try:
@@ -44,7 +44,7 @@ class ProductResource(Resource):
             return {"error": "Invalid url."}, status.HTTP_400_BAD_REQUEST
         if product is None:
             return {"error": "Does not exist."}, status.HTTP_400_BAD_REQUEST
-        product = ProductSchema().dump(obj=product)
+        product = ProductSchema().dump(obj=product).data
         return product, status.HTTP_200_OK
 
     def put(self, product_id):
