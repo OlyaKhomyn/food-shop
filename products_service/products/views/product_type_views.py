@@ -1,4 +1,4 @@
-from flask import request, Response, send_file, make_response
+from flask import request, Response, send_file
 from flask_api import status
 from flask_restful import Resource, HTTPException
 from marshmallow import ValidationError, fields
@@ -29,7 +29,6 @@ class TypeResource(Resource):
             file_data = Type.query.get(type_id)
             response = send_file(BytesIO(file_data.photo), attachment_filename='image.png',
                                                as_attachment=True)
-            # response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
             return response
         try:
             type = Type.query.get(type_id)

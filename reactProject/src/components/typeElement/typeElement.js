@@ -14,7 +14,6 @@ class TypeElement extends Component {
     };
 
     getImage= () => {
-        console.log(this.state.id)
         const url = `http://127.0.0.1:5000/type/${this.state.id}?download=true`;
         axios.get(url, {
             responseType: 'arraybuffer',
@@ -33,9 +32,6 @@ class TypeElement extends Component {
         this.getImage()
     }
 
-    dispImage = () => {
-
-    };
 
     render() {
         return <div><Link to={
@@ -45,7 +41,7 @@ class TypeElement extends Component {
             }}
         >
             {this.state.type}
-            <img src={this.state.image} />
+            <img src={this.state.image} width='35%' height='35%'/>
         </Link>
         </div>
     }

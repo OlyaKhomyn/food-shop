@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Float, Text, ForeignKey
+from sqlalchemy import Column, Integer, String, Float, Text, ForeignKey, LargeBinary
 
 from products import db
 
@@ -9,4 +9,5 @@ class Product(db.Model):
     price = Column(Float)
     description = Column(Text)
     amount = Column(Integer, nullable=False)
+    photo = Column(LargeBinary)
     type = Column(Integer, ForeignKey('type.id'))

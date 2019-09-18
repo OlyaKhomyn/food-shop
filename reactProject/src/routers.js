@@ -9,6 +9,7 @@ import ProductsList from './components/productsList/productsList'
 import ProductItem from './components/productItem/productItem'
 import BasketList from "./components/basketList/basketList";
 import TypePost from "./components/typePost/typePost";
+import ProductPost from "./components/productPost/productPost";
 
 
 const Routers = () => {
@@ -23,6 +24,7 @@ const Routers = () => {
                     <Route path='/product/:name' exact component={ProductItem}/>
                     <Route path='/basket' exact component={BasketList}/>
                     <Route path='/new-type' exact component={TypePost}/>
+                    <Route path='/new-product' exact component={ProductPost}/>
                 </Switch>
             </div>
         </BrowserRouter>

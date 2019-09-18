@@ -6,7 +6,8 @@ class TypePost extends React.Component {
     constructor(props) {
         super(props);
         this.state ={
-            file: null
+            file: null,
+            type_name: undefined
         };
         this.onFormSubmit = this.onFormSubmit.bind(this);
         this.onChange = this.onChange.bind(this);
@@ -15,8 +16,8 @@ class TypePost extends React.Component {
         e.preventDefault();
         const formData = new FormData();
         formData.append('photo',this.state.file);
-        const val = Math.random();
-        formData.append('type',`${val}`);
+        console.log(this.state.type_name);
+        formData.append('type',this.state.type_name);
         const config = {
             headers: {
                 'content-type': 'image/png'
@@ -33,12 +34,17 @@ class TypePost extends React.Component {
         this.setState({file:e.target.files[0]});
     }
 
+    setTypeName = (e) => {
+        this.setState({type_name: e.target.value})
+    };
+
     render() {
         return (
             <form onSubmit={this.onFormSubmit}>
-                <h1>File Upload</h1>
+                <h1>New type of product</h1>
+                <input type="text"  onChange={this.setTypeName} />
                 <input type="file" name="myImage" onChange= {this.onChange} />
-                <button type="submit">Upload</button>
+                <button type="submit">Add type</button>
             </form>
         )
     }

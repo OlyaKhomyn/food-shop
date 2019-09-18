@@ -1,9 +1,10 @@
-from flask import request, Response
+from flask import request, Response, send_file
 from flask_api import status
 from flask_restful import Resource, HTTPException
 from marshmallow import ValidationError, fields
 from sqlalchemy.exc import DataError, IntegrityError
 from webargs.flaskparser import parser
+from io import BytesIO
 
 from products import db
 from products.models.product import Product
@@ -37,7 +38,18 @@ class ProductResource(Resource):
             products = Product.query.filter(Product.type.in_(args['type'])).all()
             resp = ProductSchema(many=True).dump(obj=products).data
             return resp, status.HTTP_200_OK
-
+        args = {
+            'download': fields.Boolean()
+        }
+        try:
+            args = parser.parse(args, request)
+        except HTTPException:
+            return {"error": "Invalid url"}, status.HTTP_400_BAD_REQUEST
+        if args.get('download', None):
+            file_data = Product.query.get(product_id)
+            response = send_file(BytesIO(file_data.photo), attachment_filename='image.png',
+                                 as_attachment=True)
+            return response
         try:
             product = Product.query.get(product_id)
         except DataError:
@@ -79,10 +91,16 @@ class ProductResource(Resource):
 
     def post(self):
         try:
-            data = ProductSchema().load(request.json)
+            name = request.form['name']
+            price = request.form['price']
+            amount = request.form['amount']
+            type = request.form['type']
+            description = request.form['description']
+            photo = request.files['photo']
         except ValidationError as err:
             return err.messages, status.HTTP_400_BAD_REQUEST
-        product = Product(**data)
+        product = Product(name=name, price=price, description=description,
+                          amount=amount, type=type, photo=photo.read())
         db.session.add(product)
         try:
             db.session.commit()
