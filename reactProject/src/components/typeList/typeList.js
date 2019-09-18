@@ -1,6 +1,8 @@
 import React, {Component} from 'react';
 import axios from 'axios';
 import {Link, withRouter} from "react-router-dom";
+import TypeElement from "../typeElement/typeElement"
+import {element} from "prop-types";
 
 class TypeList extends Component {
 
@@ -10,7 +12,8 @@ class TypeList extends Component {
 
     getData = () => {
         const url = 'http://127.0.0.1:5000/type';
-        axios.get(url, {withCredentials:true}).then(response => {
+        axios.get(url, {withCredentials:true, }).then(response => {
+            // console.log(response.data);
             this.setState({types:response.data});
         })
     };
@@ -19,25 +22,15 @@ class TypeList extends Component {
         this.getData()
     }
 
+
     render() {
         return (
             <div>
-                <ul>
-                    {
-                        this.state.types.map(obj => (
-                            <li key={obj['id']}>
-                                <Link
-                                    to={
-                                        {
-                                            pathname: `/catalog/${obj['type']}`,
-                                            state: {id: obj['id']}
-                                        }}
-                                >
-                                    {obj['type']}
-                                </Link>
-                            </li>))
-                    }
-                </ul>
+                {
+                    // console.log(this.state.types)
+                    // this.state.types.map(element => console.log(element))
+                    this.state.types.map(obj => <TypeElement id={obj['id']} type={obj['type']} />)
+                }
             </div>
         );
     }

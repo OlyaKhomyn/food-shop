@@ -13,6 +13,7 @@
   "license": "ISC",
   "dependencies": {
     "axios": "latest",
+    "base64-to-image": "^1.0.2",
     "bootstrap": "^4.3.1",
     "prop-types": "latest",
     "react": "^16.8.6",

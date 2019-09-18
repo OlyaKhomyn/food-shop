@@ -8,7 +8,8 @@ class ProductItem extends Component {
         name: undefined,
         amount: undefined,
         price: undefined,
-        description: undefined
+        description: undefined,
+        image: undefined
     };
 
     getData = () => {
@@ -23,12 +24,27 @@ class ProductItem extends Component {
                 amount: data.amount,
                 description: data.description
             });
-        })
+        }).then(() => this.getImage())
     };
 
     componentDidMount() {
         this.getData();
     }
+
+    getImage= () => {
+        const url = `http://127.0.0.1:5000/product/${this.state.id}?download=true`;
+        axios.get(url, {
+            responseType: 'arraybuffer',
+            withCredentials: true,
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'image/png'
+            }
+        }).then((response) => {
+            const url = window.URL.createObjectURL(new Blob([response.data]));
+            this.setState({image:url})
+        })
+    };
 
     addToBasket = () => {
         const url = `http://127.0.0.1:5050/basket`;
@@ -50,6 +66,7 @@ class ProductItem extends Component {
                 <li>Price: {this.state.price}</li>
                 <li>Left: {this.state.amount}</li>
                 <li>About: {this.state.description}</li>
+                <img src={this.state.image} width='35%' height='35%'/>
             </ul>
             <button onClick={this.addToBasket}>Add to basket</button>
         </div>
