@@ -1,9 +1,9 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, DateTime
-import sqlalchemy_utils
 import datetime
+
+import sqlalchemy_utils
 from flask_security import UserMixin
 from itsdangerous import SignatureExpired, TimedJSONWebSignatureSerializer as Serializer
-
+from sqlalchemy import Column, Integer, String, ForeignKey, DateTime
 from users import db, app, BCRYPT
 
 

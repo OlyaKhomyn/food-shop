@@ -14,7 +14,6 @@ db = SQLAlchemy(app)
 BCRYPT = Bcrypt(app)
 
 migrate = Migrate(app, db)
-from users.models import role, user
 
 API = Api(app, catch_all_404s=True)
 CORS(app, supports_credentials=True)
