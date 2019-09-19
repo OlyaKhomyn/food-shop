@@ -4,7 +4,7 @@ import datetime
 from flask_security import UserMixin
 from itsdangerous import SignatureExpired, TimedJSONWebSignatureSerializer as Serializer
 
-from users import db, app
+from users import db, app, BCRYPT
 
 
 class User(db.Model, UserMixin):
@@ -14,7 +14,6 @@ class User(db.Model, UserMixin):
     email = Column(sqlalchemy_utils.EmailType, unique=True, nullable=False)
     first_name = Column(String(255), nullable=False)
     last_name = Column(String(255), nullable=False)
-    google_id = Column(String(255), unique=True, nullable=True, default=None)
     password = Column(String(255), nullable=True, default=None)
     role_id = Column(Integer, ForeignKey('role.id'))
     create_date = Column(DateTime, nullable=False, default=datetime.datetime.now())
@@ -34,3 +33,12 @@ class User(db.Model, UserMixin):
         except SignatureExpired:
             return None
         return User.query.get(user_id)
+
+    def __init__(self, email, first_name, last_name, role_id, password):
+        self.email = email
+        self.first_name = first_name
+        self.last_name = last_name
+        self.password = BCRYPT.generate_password_hash(
+            password, app.config.get('BCRYPT_LOG_ROUNDS')
+        ).decode()
+        self.role_id = role_id
