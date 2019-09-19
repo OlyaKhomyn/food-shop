@@ -14,7 +14,7 @@ class ProductItem extends Component {
 
     getData = () => {
         const id = this.props.location.state.id;
-        const url = `http://127.0.0.1:5000/product/${id}`;
+        const url = `http://127.0.0.1/product/${id}`;
         axios.get(url, {withCredentials: true}).then(response => {
             const data = response.data;
             this.setState({
@@ -32,7 +32,7 @@ class ProductItem extends Component {
     }
 
     getImage= () => {
-        const url = `http://127.0.0.1:5000/product/${this.state.id}?download=true`;
+        const url = `http://127.0.0.1/product/${this.state.id}?download=true`;
         axios.get(url, {
             responseType: 'arraybuffer',
             withCredentials: true,
@@ -47,7 +47,7 @@ class ProductItem extends Component {
     };
 
     addToBasket = () => {
-        const url = `http://127.0.0.1:5050/basket`;
+        const url = `http://127.0.0.1/basket`;
         const data = {
             product_id: this.state.id,
             user_id: 1,

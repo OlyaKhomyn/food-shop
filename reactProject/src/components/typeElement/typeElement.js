@@ -14,7 +14,7 @@ class TypeElement extends Component {
     };
 
     getImage= () => {
-        const url = `http://127.0.0.1:5000/type/${this.state.id}?download=true`;
+        const url = `http://127.0.0.1/type/${this.state.id}?download=true`;
         axios.get(url, {
             responseType: 'arraybuffer',
             withCredentials: true,

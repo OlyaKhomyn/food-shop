@@ -1,6 +1,6 @@
 """Config."""
 LOCKAL_DB = 'postgres://postgres:postgres@localhost:5432/basket'
-DOCKER_DB = 'postgresql://postgres:mysecretpassword@db:5432/products'
+DOCKER_DB = 'postgresql://postgres:mysecretpassword@db:5432/basket'
 
 
 class Config:
