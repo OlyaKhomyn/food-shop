@@ -32,7 +32,7 @@ class ProductPost extends React.Component {
             }
         };
 
-        axios.post("http://127.0.0.1:5000/product",formData,config)
+        axios.post("http://127.0.0.1/product",formData,config)
             .then((response) => {
                 alert("The product is successfully uploaded");
             }).catch((error) => {

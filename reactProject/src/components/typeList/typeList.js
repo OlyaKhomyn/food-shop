@@ -11,7 +11,7 @@ class TypeList extends Component {
     };
 
     getData = () => {
-        const url = 'http://127.0.0.1:5000/type';
+        const url = 'http://127.0.0.1/type';
         axios.get(url, {withCredentials:true, }).then(response => {
             // console.log(response.data);
             this.setState({types:response.data});

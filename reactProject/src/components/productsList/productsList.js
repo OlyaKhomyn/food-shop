@@ -9,7 +9,7 @@ class ProductsList extends Component {
     };
 
     getData = () => {
-        const url = `http://127.0.0.1:5000/product?type=${this.state.id}`;
+        const url = `http://127.0.0.1/product?type=${this.state.id}`;
         axios.get(url, {withCredentials: true}).then(response => {
             this.setState({products:response.data});
         })

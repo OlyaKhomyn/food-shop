@@ -24,7 +24,7 @@ class TypePost extends React.Component {
             }
         };
 
-        axios.post("http://127.0.0.1:5000/type",formData,config)
+        axios.post("http://127.0.0.1/type",formData,config)
             .then((response) => {
                 alert("The file is successfully uploaded");
             }).catch((error) => {
