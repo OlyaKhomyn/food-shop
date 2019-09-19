@@ -2,15 +2,15 @@ import os
 from users.config.base_config import Configuration
 
 BASEDIR = os.path.abspath(os.path.dirname(__file__))
-POSTGRES_LOCAL_BASE = 'postgresql://postgres:mysecretpassword@db:5432/'
-DATABASE_NAME = '4m_users_db'
+POSTGRES_LOCAL_BASE = 'postgres://postgres:postgres@localhost:5432/users'
+Docker_DB = 'postgresql://postgres:mysecretpassword@db:5432/users'
 
 
 class DevConfiguration(Configuration):
     """Development configuration."""
     DEBUG = True
     BCRYPT_LOG_ROUNDS = 4
-    SQLALCHEMY_DATABASE_URI = 'postgres://postgres:postgres@localhost:5432/users'
+    SQLALCHEMY_DATABASE_URI = Docker_DB
 
     SESSION_COOKIE_SECURE = False
     SESSION_COOKIE_HTTPONLY = False
