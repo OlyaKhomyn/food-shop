@@ -28,6 +28,7 @@ class TypePost extends React.Component {
             .then((response) => {
                 alert("The file is successfully uploaded");
             }).catch((error) => {
+                console.log(error)
         });
     }
     onChange(e) {
@@ -43,7 +44,9 @@ class TypePost extends React.Component {
             <form onSubmit={this.onFormSubmit}>
                 <h1>New type of product</h1>
                 <input type="text"  onChange={this.setTypeName} />
+                <hr />
                 <input type="file" name="myImage" onChange= {this.onChange} />
+                <hr />
                 <button type="submit">Add type</button>
             </form>
         )

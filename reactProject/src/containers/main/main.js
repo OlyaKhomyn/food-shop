@@ -7,8 +7,8 @@ class Main extends Component {
     render () {
       return (
         <div className='main'>
-            <h1>What can be better than delicious tasty food?</h1>
-            <form className='try_cont' action='/new'>
+            <h1>Healthy food shop</h1>
+            <form className='try_cont' action='/signin'>
             <button className=' btn-dark btn-lg text-center try_btn'>Try now</button>
             </form>
         </div>

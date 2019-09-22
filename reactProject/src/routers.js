@@ -10,6 +10,9 @@ import ProductItem from './components/productItem/productItem'
 import BasketList from "./components/basketList/basketList";
 import TypePost from "./components/typePost/typePost";
 import ProductPost from "./components/productPost/productPost";
+import Registration from "./components/registration/registration";
+import Login from "./components/login/login";
+import Profile from "./components/profile/profile";
 
 
 const Routers = () => {
@@ -21,6 +24,9 @@ const Routers = () => {
                     <Route path='/' exact component={Main}/>
                     <Route path='/catalog' exact component={TypeList} />
                     <Route path='/catalog/:id' exact component={ProductsList}/>
+                    <Route path='/registration' component={Registration}/>
+                    <Route path='/signin' component={Login}/>
+                    <Route path='/profile' component={Profile}/>
                     <Route path='/product/:name' exact component={ProductItem}/>
                     <Route path='/basket' exact component={BasketList}/>
                     <Route path='/new-type' exact component={TypePost}/>

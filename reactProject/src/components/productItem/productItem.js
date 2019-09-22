@@ -48,15 +48,23 @@ class ProductItem extends Component {
 
     addToBasket = () => {
         const url = `http://127.0.0.1/basket`;
-        const data = {
+        let user_id = undefined;
+        const auth_status_url = 'http://127.0.0.1/users/profile';
+        axios.get(auth_status_url, {withCredentials: true}).
+        then(response => {
+            user_id = response.data.user_id;
+        }).then(response =>
+        {
+           const data = {
             product_id: this.state.id,
-            user_id: 1,
+            user_id: user_id,
             amount: 1,
-            state: false
-        };
-        axios.post(url, data, {withCredentials: true}).then(() => {
+            state: false };
+           console.log(data)
+           axios.post(url, data, {withCredentials: true}).then(() => {
             alert('Success');
         }).catch(() => alert('Something wrong'))
+        });
     };
 
     render() {
