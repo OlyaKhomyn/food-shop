@@ -11,9 +11,9 @@ from products.serializers.product_type_schema import ProductTypeSchema
 from io import BytesIO
 
 
-
-
 class TypeResource(Resource):
+
+    ALLOWED_EXTENSIONS = set(['png', 'jpg'])
 
     def get(self, type_id=None):
         if not type_id:
@@ -29,8 +29,7 @@ class TypeResource(Resource):
             return {"error": "Invalid url"}, status.HTTP_400_BAD_REQUEST
         if args.get('download', None):
             file_data = Type.query.get(type_id)
-            response = send_file(BytesIO(file_data.photo), attachment_filename='image.png',
-                                               as_attachment=True)
+            response = send_file(BytesIO(file_data.photo), attachment_filename='image.png', as_attachment=True)
             return response
         try:
             type = Type.query.get(type_id)
@@ -50,7 +49,7 @@ class TypeResource(Resource):
         if not prod_type:
             return {"error": "Does not exist."}, status.HTTP_400_BAD_REQUEST
         try:
-            data = ProductTypeSchema().load(request.json)
+            data = ProductTypeSchema().load(request.json).data
         except ValidationError as err:
             return err.messages, status.HTTP_400_BAD_REQUEST
         setattr(prod_type, 'type', data['type'])
@@ -59,7 +58,6 @@ class TypeResource(Resource):
         except IntegrityError:
             return {"error": "Such type already exists."}, status.HTTP_400_BAD_REQUEST
         return Response(status=status.HTTP_200_OK)
-
 
     def delete(self, type_id):
         try:
@@ -72,17 +70,24 @@ class TypeResource(Resource):
         db.session.commit()
         return Response(status=status.HTTP_200_OK)
 
+    def allowed_file(self, filename):
+        return '.' in filename and \
+               filename.rsplit('.', 1)[1].lower() in self.ALLOWED_EXTENSIONS
 
     def post(self):
         try:
             data = request.form['type']
             photo = request.files['photo']
-        except ValidationError as err:
-            return err.messages, status.HTTP_400_BAD_REQUEST
-        prod_type = Type(type=data, photo=photo.read())
-        db.session.add(prod_type)
-        try:
-            db.session.commit()
-        except IntegrityError:
-            return {"error": "Type already exist."}, status.HTTP_400_BAD_REQUEST
-        return Response(status=status.HTTP_200_OK)
+        except KeyError:
+            return {'error': "Wrong data"}, status.HTTP_400_BAD_REQUEST
+        if photo.filename == '':
+            return {'error': "No file chosen"}, status.HTTP_400_BAD_REQUEST
+        if photo and self.allowed_file(photo.filename):
+            prod_type = Type(type=data, photo=photo.read())
+            db.session.add(prod_type)
+            try:
+                db.session.commit()
+            except IntegrityError:
+                return {"error": "Type already exist."}, status.HTTP_400_BAD_REQUEST
+            return Response(status=status.HTTP_200_OK)
+        return {'error': "Wrong file format"}, status.HTTP_400_BAD_REQUEST

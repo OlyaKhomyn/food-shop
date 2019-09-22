@@ -16,7 +16,6 @@ class TypePost extends React.Component {
         e.preventDefault();
         const formData = new FormData();
         formData.append('photo',this.state.file);
-        console.log(this.state.type_name);
         formData.append('type',this.state.type_name);
         const config = {
             headers: {
@@ -27,8 +26,8 @@ class TypePost extends React.Component {
         axios.post("http://127.0.0.1/type",formData,config)
             .then((response) => {
                 alert("The file is successfully uploaded");
-            }).catch((error) => {
-                console.log(error)
+            }).catch((error, info) => {
+                alert(error.response.data['error'])
         });
     }
     onChange(e) {

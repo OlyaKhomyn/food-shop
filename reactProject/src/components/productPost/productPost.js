@@ -36,7 +36,14 @@ class ProductPost extends React.Component {
             .then((response) => {
                 alert("The product is successfully uploaded");
             }).catch((error) => {
-                alert('error')
+                console.log(error.response);
+                if (error.response.data['error'] != undefined)
+                {
+                    alert(error.response.data['error'] + "\nIt must be either .png or .jpg")
+                }
+                else {
+                    alert("Input all required fields")
+                }
         });
     }
     onChange(e) {

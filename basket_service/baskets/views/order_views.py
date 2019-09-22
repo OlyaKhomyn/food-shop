@@ -15,13 +15,16 @@ class OrderResource(Resource):
     def get(self, order_id=None):
         if not order_id:
             args = {
-                'user_id': fields.Int(required=True)
+                'user_id': fields.Int()
             }
             try:
                 args = parser.parse(args, request)
             except HTTPException:
                 return {"error": "Invalid url"}, status.HTTP_400_BAD_REQUEST
-            orders = Order.query.filter(Order.user_id == args['user_id']).all()
+            try:
+                orders = Order.query.filter(Order.user_id == args['user_id']).all()
+            except KeyError:
+                return {"error": "user_id is required"}, status.HTTP_400_BAD_REQUEST
             resp = OrderSchema(many=True).dump(obj=orders)
             return resp, status.HTTP_200_OK
 
@@ -31,7 +34,7 @@ class OrderResource(Resource):
             return {"error": "Invalid url."}, status.HTTP_400_BAD_REQUEST
         if order is None:
             return {"error": "Does not exist."}, status.HTTP_400_BAD_REQUEST
-        order = OrderSchema().dump(obj=order)
+        order = OrderSchema().dump(obj=order).data
         return order, status.HTTP_200_OK
 
     def put(self, order_id):
@@ -42,7 +45,7 @@ class OrderResource(Resource):
         if not order:
             return {"error": "Does not exist."}, status.HTTP_400_BAD_REQUEST
         try:
-            data = OrderSchema().load(request.json)
+            data = OrderSchema().load(request.json).data
         except ValidationError as err:
             return err.messages, status.HTTP_400_BAD_REQUEST
         for key, value in data.items():
@@ -66,7 +69,7 @@ class OrderResource(Resource):
 
     def post(self):
         try:
-            data = OrderSchema().load(request.json)
+            data = OrderSchema().load(request.json).data
         except ValidationError as err:
             return err.messages, status.HTTP_400_BAD_REQUEST
         order = Order(**data)
