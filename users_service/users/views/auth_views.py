@@ -19,14 +19,17 @@ class RegisterResource(Resource):
         try:
             new_user = UserSchema(exclude=['role']).load(request.json).data
         except ValidationError as err:
-            return jsonify(err.messages), status.HTTP_400_BAD_REQUEST
-        new_user = User(email=new_user['email'], password=new_user['password'],
-                        first_name=new_user['first_name'], last_name=new_user['last_name'], role_id=1)
+            return err.messages, status.HTTP_400_BAD_REQUEST
+        try:
+            new_user = User(email=new_user['email'], password=new_user['password'],
+                            first_name=new_user['first_name'], last_name=new_user['last_name'], role_id=1)
+        except KeyError:
+            return {'error': "Missing required field"}
         db.session.add(new_user)
         try:
             db.session.commit()
         except IntegrityError as err:
-            db.session.rollback()
+            db.session.emarollback()
             response = {
                 'error': 'Already exists.'
             }
@@ -46,7 +49,7 @@ class LoginResource(Resource):
         try:
             user_data = UserSchema(exclude=['role']).load(request.json).data
         except ValidationError as err:
-            return jsonify(err.messages), status.HTTP_400_BAD_REQUEST
+            return err.messages, status.HTTP_400_BAD_REQUEST
         try:
             user = User.query.filter_by(
                 email=user_data['email']

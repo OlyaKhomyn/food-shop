@@ -3,7 +3,7 @@ from marshmallow import Schema, fields
 
 class ProductSchema(Schema):
     id = fields.Integer()
-    name = title = fields.String()
+    name = fields.String()
     price = fields.Float()
     description = fields.String()
     amount = fields.Integer()

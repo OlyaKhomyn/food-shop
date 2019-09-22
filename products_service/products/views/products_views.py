@@ -1,4 +1,4 @@
-from flask import request, Response, send_file
+from flask import request, Response, send_file, jsonify
 from flask_api import status
 from flask_restful import Resource, HTTPException
 from marshmallow import ValidationError, fields
@@ -23,11 +23,13 @@ from products.serializers.product_schema import ProductSchema, ProductFromListSc
 
 class ProductResource(Resource):
 
+    ALLOWED_EXTENSIONS = set(['png', 'jpg'])
+
     def get(self, product_id=None):
         if not product_id:
             args = {
                 'type': fields.List(fields.Int()),
-                'product_id': fields.List(fields.Int(validate=lambda val: val > 0))
+                'product_id': fields.List(fields.Int())
             }
             try:
                 args = parser.parse(args, request)
@@ -46,7 +48,10 @@ class ProductResource(Resource):
                     resp = ProductFromListSchema(many=True).dump(obj=products).data
                     status_code = status.HTTP_200_OK
                 return resp, status_code
-            products = Product.query.filter(Product.type.in_(args['type'])).all()
+            try:
+                products = Product.query.filter(Product.type.in_(args['type'])).all()
+            except KeyError:
+                return {"error": "Missing type id."}, 400
             resp = ProductSchema(many=True).dump(obj=products).data
             return resp, status.HTTP_200_OK
         args = {
@@ -70,7 +75,6 @@ class ProductResource(Resource):
         product = ProductSchema().dump(obj=product).data
         return product, status.HTTP_200_OK
 
-
     def put(self, product_id):
         try:
             product = Product.query.get(product_id)
@@ -79,7 +83,7 @@ class ProductResource(Resource):
         if not product:
             return {"error": "Does not exist."}, status.HTTP_400_BAD_REQUEST
         try:
-            data = ProductSchema().load(request.json)
+            data = ProductSchema().load(request.json).data
         except ValidationError as err:
             return err.messages, status.HTTP_400_BAD_REQUEST
         for key, value in data.items():
@@ -90,11 +94,10 @@ class ProductResource(Resource):
             return {"error": "Type does not exist."}, status.HTTP_400_BAD_REQUEST
         return Response(status=status.HTTP_200_OK)
 
-
     def delete(self, product_id):
         try:
             product = Product.query.get(product_id)
-        except DataError as err:
+        except DataError:
             return {"error": "Invalid url."}, status.HTTP_400_BAD_REQUEST
         if product is None:
             return {"error": "Does not exist."}, status.HTTP_400_BAD_REQUEST
@@ -102,22 +105,26 @@ class ProductResource(Resource):
         db.session.commit()
         return Response(status=status.HTTP_200_OK)
 
+    def allowed_file(self, filename):
+        return '.' in filename and \
+               filename.rsplit('.', 1)[1].lower() in self.ALLOWED_EXTENSIONS
 
     def post(self):
         try:
-            name = request.form['name']
-            price = request.form['price']
-            amount = request.form['amount']
-            type = request.form['type']
-            description = request.form['description']
+            keys = set(['name', 'price', 'amount', 'type', 'description'])
+            attrs = {key: request.form[key] for key in keys}
+            data = ProductSchema().load(attrs).data
             photo = request.files['photo']
         except ValidationError as err:
             return err.messages, status.HTTP_400_BAD_REQUEST
-        product = Product(name=name, price=price, description=description,
-                          amount=amount, type=type, photo=photo.read())
-        db.session.add(product)
-        try:
-            db.session.commit()
-        except IntegrityError:
-            return {"error": "Type does not exist."}, status.HTTP_400_BAD_REQUEST
-        return Response(status=status.HTTP_200_OK)
+        if photo.filename == '':
+            return {'error': "No file chosen"}, status.HTTP_400_BAD_REQUEST
+        if photo and self.allowed_file(photo.filename):
+            product = Product(**data, photo=photo.read())
+            db.session.add(product)
+            try:
+                db.session.commit()
+            except IntegrityError:
+                return {"error": "Type does not exist."}, status.HTTP_400_BAD_REQUEST
+            return Response(status=status.HTTP_200_OK)
+        return {'error': "Wrong file format"}, status.HTTP_400_BAD_REQUEST

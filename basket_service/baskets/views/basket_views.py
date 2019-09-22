@@ -22,7 +22,10 @@ class BasketResource(Resource):
                 args = parser.parse(args, request)
             except HTTPException:
                 return {"error": "Invalid url"}, status.HTTP_400_BAD_REQUEST
-            baskets = Basket.query.filter(Basket.user_id == args['user_id']).filter(Basket.state == args['state']).all()
+            try:
+                baskets = Basket.query.filter(Basket.user_id == args['user_id']).filter(Basket.state == args['state']).all()
+            except KeyError:
+                return {"error": "user_id and state is required"}, status.HTTP_400_BAD_REQUEST
             resp = BasketSchema(many=True).dump(obj=baskets).data
             return resp, status.HTTP_200_OK
 
@@ -75,5 +78,5 @@ class BasketResource(Resource):
         try:
             db.session.commit()
         except IntegrityError:
-            return {"error": "Wrong data."}, status.HTTP_400_BAD_REQUEST
+            return {"error": "Such product is already added."}, status.HTTP_400_BAD_REQUEST
         return Response(status=status.HTTP_200_OK)

@@ -60,10 +60,11 @@ class ProductItem extends Component {
             user_id: user_id,
             amount: 1,
             state: false };
-           console.log(data)
            axios.post(url, data, {withCredentials: true}).then(() => {
-            alert('Success');
-        }).catch(() => alert('Something wrong'))
+            alert('Added to basket.');
+        }).catch((error) => {
+            alert(error.response.data['error'])
+            })
         });
     };
 

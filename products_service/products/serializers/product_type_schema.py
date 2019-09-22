@@ -3,7 +3,7 @@ from marshmallow import Schema, fields
 
 class ProductTypeSchema(Schema):
     id = fields.Integer()
-    type = fields.String()
+    type = fields.String(required=True)
 
     class Meta:
         """Meta class."""

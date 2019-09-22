@@ -12,6 +12,11 @@ class Registration extends Component {
         last_name: ""
     };
 
+    validateForm = () => {
+        return this.state['email'].length > 0 && this.state['password'].length > 0
+            && this.state['first_name'].length > 0 && this.state['last_name'].length > 0;
+    };
+
     handleChange = event => {
         this.setState({
             [event.target.id]: event.target.value
@@ -20,24 +25,27 @@ class Registration extends Component {
 
     handleSubmit = event => {
         event.preventDefault();
+        if (this.validateForm()) {
+            const user = {
+                "email": this.state.email,
+                "password": this.state.password,
+                "first_name": this.state.first_name,
+                "last_name": this.state.last_name
+            };
 
-        const user = {
-            "email": this.state.email,
-            "password": this.state.password,
-            "first_name": this.state.first_name,
-            "last_name": this.state.last_name
-        };
+            const url = `http://127.0.0.1/users/register`;
 
-        const url = `http://127.0.0.1/users/register`;
-
-        axios.post(url, user, { withCredentials:true, crossDomain: true }
-        ).then( response => {
-            alert(response.data.message);
-            window.location = `http://127.0.0.1:3000/catalog`;
-        }).catch( error => {
-            alert(error);
-        });
-
+            axios.post(url, user, {withCredentials: true, crossDomain: true}
+            ).then(response => {
+                alert(response.data.message);
+                window.location = `http://127.0.0.1:3000/catalog`;
+            }).catch(error => {
+                alert(alert(error.response.data['error']));
+            });
+        }
+        else {
+            alert("Enter all required fields!")
+        }
     };
 
     render() {

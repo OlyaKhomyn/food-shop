@@ -4,15 +4,22 @@ import qs from 'qs';
 
 class BasketList extends Component {
     state = {
+        user: undefined,
         basket: [],
         products: []
     };
 
     getData = () => {
-        const url = `http://127.0.0.1/basket?user_id=1&state=false`;
-        axios.get(url, {withCredentials: true}).then(response => {
-            this.setState({basket:response.data});
-        }).then(() => this.getProducts())
+        const user_url = `http://127.0.0.1/users/profile`;
+        axios.get(user_url, {withCredentials: true}).then(response => {
+            this.setState({user: response.data['user_id']});
+            console.log(response.data['user_id'])
+        }).then(() => {
+            const url = `http://127.0.0.1/basket?user_id=${this.state.user}&state=false`;
+            axios.get(url, {withCredentials: true}).then(response => {
+                this.setState({basket:response.data});
+            }).then(() => this.getProducts())
+        });
     };
 
     getProducts = () => {
