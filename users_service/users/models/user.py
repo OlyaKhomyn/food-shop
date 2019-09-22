@@ -5,6 +5,7 @@ from flask_security import UserMixin
 from itsdangerous import SignatureExpired, TimedJSONWebSignatureSerializer as Serializer
 from sqlalchemy import Column, Integer, String, ForeignKey, DateTime
 from users import db, app, BCRYPT
+from users.models.role import Role
 
 
 class User(db.Model, UserMixin):

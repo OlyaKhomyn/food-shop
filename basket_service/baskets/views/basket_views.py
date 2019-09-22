@@ -23,7 +23,7 @@ class BasketResource(Resource):
             except HTTPException:
                 return {"error": "Invalid url"}, status.HTTP_400_BAD_REQUEST
             baskets = Basket.query.filter(Basket.user_id == args['user_id']).filter(Basket.state == args['state']).all()
-            resp = BasketSchema(many=True).dump(obj=baskets)
+            resp = BasketSchema(many=True).dump(obj=baskets).data
             return resp, status.HTTP_200_OK
 
         try:
@@ -32,7 +32,7 @@ class BasketResource(Resource):
             return {"error": "Invalid url."}, status.HTTP_400_BAD_REQUEST
         if basket is None:
             return {"error": "Does not exist."}, status.HTTP_400_BAD_REQUEST
-        basket = BasketSchema().dump(obj=basket)
+        basket = BasketSchema().dump(obj=basket).data
         return basket, status.HTTP_200_OK
 
     def put(self, basket_id):
@@ -43,7 +43,7 @@ class BasketResource(Resource):
         if not basket:
             return {"error": "Does not exist."}, status.HTTP_400_BAD_REQUEST
         try:
-            data = BasketSchema().load(request.json)
+            data = BasketSchema().load(request.json).data
         except ValidationError as err:
             return err.messages, status.HTTP_400_BAD_REQUEST
         for key, value in data.items():
@@ -67,7 +67,7 @@ class BasketResource(Resource):
 
     def post(self):
         try:
-            data = BasketSchema().load(request.json)
+            data = BasketSchema().load(request.json).data
         except ValidationError as err:
             return err.messages, status.HTTP_400_BAD_REQUEST
         basket = Basket(**data)

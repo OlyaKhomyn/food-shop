@@ -53,16 +53,22 @@ class ProductPost extends React.Component {
                 <h1>New product</h1>
                 Name
                 <input type="text"  name="name" value={this.state.name} onChange={this.setValue} />
+                <hr />
                 Price
                 <input type="text"  name="price" value={this.state.price} onChange={this.setValue} />
+                <hr />
                 Amount
                 <input type="text"  name="amount" value={this.state.amount} onChange={this.setValue} />
+                <hr />
                 Type
                 <input type="text"  name="type" value={this.state.type} onChange={this.setValue} />
+                <hr />
                 Description
                 <textarea  name="description" value={this.state.description} onChange={this.setValue} />
+                <hr />
                 <input type="file" name="myImage" onChange= {this.onChange} />
-                <button type="submit">Add type</button>
+                <hr />
+                <button type="submit">Add product</button>
             </form>
         )
     }

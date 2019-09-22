@@ -9,10 +9,12 @@ from products import db
 from products.models.product_type import Type
 from products.serializers.product_type_schema import ProductTypeSchema
 from io import BytesIO
-from flask_cors import cross_origin
+
+
 
 
 class TypeResource(Resource):
+
     def get(self, type_id=None):
         if not type_id:
             types = Type.query.all()
@@ -39,6 +41,7 @@ class TypeResource(Resource):
         type = ProductTypeSchema().dump(obj=type).data
         return type, status.HTTP_200_OK
 
+
     def put(self, type_id):
         try:
             prod_type = Type.query.get(type_id)
@@ -57,6 +60,7 @@ class TypeResource(Resource):
             return {"error": "Such type already exists."}, status.HTTP_400_BAD_REQUEST
         return Response(status=status.HTTP_200_OK)
 
+
     def delete(self, type_id):
         try:
             prod_type = Type.query.get(type_id)
@@ -67,6 +71,7 @@ class TypeResource(Resource):
         db.session.delete(prod_type)
         db.session.commit()
         return Response(status=status.HTTP_200_OK)
+
 
     def post(self):
         try:
