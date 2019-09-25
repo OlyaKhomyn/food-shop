@@ -1,4 +1,3 @@
-"""Field model."""
 from sqlalchemy import Column, Integer, String, Float, DateTime
 import datetime
 from baskets import db

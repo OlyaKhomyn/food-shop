@@ -9,7 +9,8 @@ class ProductItem extends Component {
         amount: undefined,
         price: undefined,
         description: undefined,
-        image: undefined
+        image: undefined,
+        to_basket: 1
     };
 
     getData = () => {
@@ -55,17 +56,27 @@ class ProductItem extends Component {
             user_id = response.data.user_id;
         }).then(response =>
         {
-           const data = {
-            product_id: this.state.id,
-            user_id: user_id,
-            amount: 1,
-            state: false };
-           axios.post(url, data, {withCredentials: true}).then(() => {
-            alert('Added to basket.');
-        }).catch((error) => {
-            alert(error.response.data['error'])
-            })
+            if (Number.isInteger(Number(this.state.to_basket)))
+            {
+                const data = {
+                product_id: this.state.id,
+                user_id: user_id,
+                amount: this.state.to_basket,
+                state: false };
+                axios.post(url, data, {withCredentials: true}).then(() => {
+                    alert('Added to basket.');
+                }).catch((error) => {
+                    alert(error.response.data['error'])
+                })
+            }
+            else {
+                alert("Amount should be an integer!")
+            }
         });
+    };
+
+    changeAmount = (event) => {
+        this.setState({to_basket: event.target.value})
     };
 
     render() {
@@ -77,6 +88,10 @@ class ProductItem extends Component {
                 <li>About: {this.state.description}</li>
                 <img src={this.state.image} width='35%' height='35%'/>
             </ul>
+            <br/>
+            Amount
+            <input type="text" onChange={this.changeAmount} value={this.state.to_basket} />
+            <br />
             <button onClick={this.addToBasket}>Add to basket</button>
         </div>
     }

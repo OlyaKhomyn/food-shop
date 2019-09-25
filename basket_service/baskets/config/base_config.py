@@ -6,5 +6,5 @@ DOCKER_DB = 'postgresql://postgres:mysecretpassword@db:5432/basket'
 class Config:
     """Implementation of Configuration class."""
     DEBUG = False
-    SQLALCHEMY_DATABASE_URI = DOCKER_DB
+    SQLALCHEMY_DATABASE_URI = LOCKAL_DB
     SQLALCHEMY_TRACK_MODIFICATIONS = True
