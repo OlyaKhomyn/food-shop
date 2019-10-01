@@ -12,6 +12,10 @@ services:
     image: basket:latest
     container_name: basket
 
+  actions-service:
+    image: actions:latest
+    container_name: actions
+
   products-service:
     image: products:latest
     container_name: products

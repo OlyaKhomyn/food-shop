@@ -5,6 +5,7 @@ class ProductSchema(Schema):
     id = fields.Integer()
     name = fields.String()
     price = fields.Float()
+    new_price = fields.Float()
     description = fields.String()
     amount = fields.Integer()
     type = fields.Integer()

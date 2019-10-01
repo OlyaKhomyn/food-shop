@@ -94,6 +94,17 @@ class ProductResource(Resource):
             return {"error": "Type does not exist."}, status.HTTP_400_BAD_REQUEST
         return Response(status=status.HTTP_200_OK)
 
+    def patch(self, product_id):
+        try:
+            product = Product.query.get(product_id)
+        except DataError:
+            return {"error": "Invalid url."}, status.HTTP_400_BAD_REQUEST
+        if not product:
+            return {"error": "Does not exist."}, status.HTTP_400_BAD_REQUEST
+        product.new_price = request.json['new_price']
+        db.session.commit()
+        return Response(status=status.HTTP_200_OK)
+
     def delete(self, product_id):
         try:
             product = Product.query.get(product_id)
