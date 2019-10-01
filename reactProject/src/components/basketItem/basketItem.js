@@ -9,8 +9,7 @@ class BasketItem extends Component {
     state = {
         productId: this.props.productId,
         productName: this.props.productName,
-        productPrice: this.props.productPrice,
-        edit: false,
+        productPrice: this.props.productPrice
     };
 
     delete = () => {
@@ -48,7 +47,6 @@ class BasketItem extends Component {
             </Link>
                 <div>
                     <button onClick={this.delete} type="button">Remove from basket</button>
-                    <button onClick={this.edit} type="button">Edit</button>
                 </div>
             </div>
     }

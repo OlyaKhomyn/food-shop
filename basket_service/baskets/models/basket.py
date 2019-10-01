@@ -9,4 +9,4 @@ class Basket(db.Model):
     user_id = Column(Integer)
     amount = Column(Integer)
     state = Column(Boolean)
-    __table_args__ = (UniqueConstraint('product_id', 'user_id'), )
+    __table_args__ = (UniqueConstraint('product_id', 'user_id', 'state'), )

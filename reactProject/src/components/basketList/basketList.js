@@ -2,12 +2,13 @@ import React, {Component} from 'react';
 import axios from 'axios';
 import qs from 'qs';
 import BasketItem from '../basketItem/basketItem'
+import Order from "../order/order";
 
 class BasketList extends Component {
     state = {
         user: undefined,
         basket: [],
-        products: [],
+        products: null,
         buy: false
     };
 
@@ -59,21 +60,22 @@ class BasketList extends Component {
 
     order = () => {
         this.setState({
-            buy: !this.state.edit})
+            buy: !this.state.buy})
     };
 
     render() {
         return (
         <div>
             {
-                this.state.products.map(obj => {
+                this.state.products && this.state.products.map(obj => {
                     return <BasketItem basketId={obj['basket_id']} productId={obj['id']} productName={obj['name']}
                                        productPrice={obj['price']} amount={obj['amount']} />
                 })
             }
-            <button onClick={this.order} type="button">Buy</button>
+            <hr />
+            { this.state.products && <button onClick={this.order} type="button">Buy</button>}
             {
-                this.state.buy && <MadeOrder products={this.state.products} user_id={this.state.user} />
+                this.state.buy  && <Order products={this.state.products} user_id={this.state.user} />
             }
         </div>);
     }

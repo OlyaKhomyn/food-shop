@@ -12,7 +12,7 @@ class Header extends Component {
         element2: <Link className="nav-link nav-text" to="/signin">Sign in</Link>,
         element3: undefined,
         element4: undefined,
-        element5: undefined
+        element5: undefined,
     };
 
     componentDidMount() {
@@ -35,7 +35,8 @@ class Header extends Component {
                 element1: <Link className="nav-link nav-text" to="/profile">Profile</Link>,
                 element2: <Link className="nav-link nav-text" to="#" onClick={this.signOut}>Sign out</Link>,
                 element3: <Link className="nav-link nav-text" to="/catalog">Catalog</Link>,
-                element4:  <Link className="nav-link nav-text" to="/basket">Basket</Link>
+                element4:  <Link className="nav-link nav-text" to="/basket">Basket</Link>,
+                element5: <Link className="nav-link nav-text" to="/orders">Orders</Link>
             });
         } else {
             this.setState({
