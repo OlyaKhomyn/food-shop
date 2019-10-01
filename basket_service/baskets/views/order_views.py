@@ -6,7 +6,9 @@ from sqlalchemy.exc import DataError, IntegrityError
 from webargs.flaskparser import parser
 
 from baskets import db
+from baskets.models.payment import Payment
 from baskets.models.order import Order
+
 from baskets.serializers.order_schema import OrderSchema
 
 
@@ -25,7 +27,10 @@ class OrderResource(Resource):
                 orders = Order.query.filter(Order.user_id == args['user_id']).all()
             except KeyError:
                 return {"error": "user_id is required"}, status.HTTP_400_BAD_REQUEST
-            resp = OrderSchema(many=True).dump(obj=orders)
+            for order in orders:
+                payment = Payment.query.get(order.payment)
+                order.payment_info = payment
+            resp = OrderSchema(many=True).dump(obj=orders).data
             return resp, status.HTTP_200_OK
 
         try:
@@ -34,27 +39,10 @@ class OrderResource(Resource):
             return {"error": "Invalid url."}, status.HTTP_400_BAD_REQUEST
         if order is None:
             return {"error": "Does not exist."}, status.HTTP_400_BAD_REQUEST
+        payment = Payment.query.get(order.payment)
+        order.payment_info = payment
         order = OrderSchema().dump(obj=order).data
         return order, status.HTTP_200_OK
-
-    def put(self, order_id):
-        try:
-            order = Order.query.get(order_id)
-        except DataError:
-            return {"error": "Invalid url."}, status.HTTP_400_BAD_REQUEST
-        if not order:
-            return {"error": "Does not exist."}, status.HTTP_400_BAD_REQUEST
-        try:
-            data = OrderSchema().load(request.json).data
-        except ValidationError as err:
-            return err.messages, status.HTTP_400_BAD_REQUEST
-        for key, value in data.items():
-            setattr(order, key, value)
-        try:
-            db.session.commit()
-        except IntegrityError:
-            return {"error": "Wrong data."}, status.HTTP_400_BAD_REQUEST
-        return Response(status=status.HTTP_200_OK)
 
     def delete(self, order_id):
         try:
@@ -63,6 +51,8 @@ class OrderResource(Resource):
             return {"error": "Invalid url."}, status.HTTP_400_BAD_REQUEST
         if order is None:
             return {"error": "Does not exist."}, status.HTTP_400_BAD_REQUEST
+        payment = Payment.query.get(order.payment)
+        db.session.delete(payment)
         db.session.delete(order)
         db.session.commit()
         return Response(status=status.HTTP_200_OK)
@@ -72,6 +62,10 @@ class OrderResource(Resource):
             data = OrderSchema().load(request.json).data
         except ValidationError as err:
             return err.messages, status.HTTP_400_BAD_REQUEST
+        payment = Payment(**data.pop('payment_info'))
+        db.session.add(payment)
+        db.session.commit()
+        data['payment'] = payment.id
         order = Order(**data)
         db.session.add(order)
         try:

@@ -1,4 +1,5 @@
 from marshmallow import Schema, fields, post_load, pre_dump
+from baskets.serializers.payment_schema import PaymentSchema
 
 
 class OrderSchema(Schema):
@@ -8,6 +9,7 @@ class OrderSchema(Schema):
     total_price = fields.Float()
     date = fields.Date()
     payment = fields.Integer()
+    payment_info = fields.Nested(PaymentSchema)
 
     @post_load
     def convert_list_from_str(self, data, **kwargs):
