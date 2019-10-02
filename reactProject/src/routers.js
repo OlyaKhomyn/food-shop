@@ -14,6 +14,7 @@ import Registration from "./components/registration/registration";
 import Login from "./components/login/login";
 import Profile from "./components/profile/profile";
 import OrdersList from "./components/order/prevOrders";
+import ActionPost from "./components/actions/actionPost";
 
 
 const Routers = () => {
@@ -33,6 +34,7 @@ const Routers = () => {
                     <Route path='/new-type' exact component={TypePost}/>
                     <Route path='/new-product' exact component={ProductPost}/>
                     <Route path='/orders' exact component={OrdersList}/>
+                    <Route path='/new-action' exact component={ActionPost}/>
                 </Switch>
             </div>
         </BrowserRouter>

@@ -13,6 +13,7 @@ class Header extends Component {
         element3: undefined,
         element4: undefined,
         element5: undefined,
+        element6: undefined
     };
 
     componentDidMount() {
@@ -27,7 +28,8 @@ class Header extends Component {
                 element2: <Link className="nav-link nav-text" to="#" onClick={this.signOut}>Sign out</Link>,
                 element3: <Link className="nav-link nav-text" to="/catalog">Catalog</Link>,
                 element4: <Link className="nav-link nav-text" to="/new-type">New Type</Link>,
-                element5: <Link className="nav-link nav-text" to="/new-product">New Product</Link>
+                element5: <Link className="nav-link nav-text" to="/new-product">New Product</Link>,
+                element6: <Link className="nav-link nav-text" to="/new-action">New Action</Link>
             });
         } else if (condition)
         {
@@ -79,6 +81,9 @@ class Header extends Component {
                             </li>
                             <li className="nav-item">
                                 {this.state.element5}
+                            </li>
+                            <li className="nav-item">
+                                {this.state.element6}
                             </li>
                         </ul>
                     </div>
