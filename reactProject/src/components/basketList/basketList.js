@@ -31,7 +31,11 @@ class BasketList extends Component {
             for (let j in this.state.basket)
             {
                 if (this.state.basket[j]['product_id'] == this.state.products[i]['id'])
-                {
+                {;
+                    if (products[i]['new_price'])
+                    {
+                        products[i]['price'] = products[i]['new_price']
+                    }
                     products[i]['amount'] = this.state.basket[j]['amount'];
                     products[i]['basket_id'] = this.state.basket[j]['id']
                 }
@@ -70,7 +74,7 @@ class BasketList extends Component {
                 this.state.products && this.state.products.map(obj => {
                     return <BasketItem basketId={obj['basket_id']} productId={obj['id']} productName={obj['name']}
                                        productPrice={obj['price']} amount={obj['amount']} />
-                })
+                }) || "No element in basket"
             }
             <hr />
             { this.state.products && <button onClick={this.order} type="button">Buy</button>}

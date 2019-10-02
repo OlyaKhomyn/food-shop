@@ -1,6 +1,17 @@
 import React from 'react'
 import axios from 'axios';
+import Select from "react-select";
 
+
+const colourStyles = {
+  control: styles => ({ ...styles, backgroundColor: 'white' }),
+  option: (styles) => {
+    return {
+      ...styles,
+      backgroundColor: '#ff9966'
+    };
+  },
+};
 
 class ProductPost extends React.Component {
 
@@ -46,12 +57,34 @@ class ProductPost extends React.Component {
                 }
         });
     }
+
+    componentDidMount() {
+        this.getTypes()
+    }
+
     onChange(e) {
         this.setState({file:e.target.files[0]});
     }
 
     setValue = (e) => {
         this.setState({[e.target.name]: e.target.value})
+    };
+
+    getTypes = () => {
+        const types = `http:///127.0.0.1/type`;
+        axios.get(types, {withCredentials: true}
+        ).then(response => {
+            let type = response.data;
+            let names = type.map(el => {
+                return {value: el['id'], label: el['type']}
+            });
+            let ids = names.map(el => el['value']);
+            this.setState({typeNames: names, ids: ids});
+        });
+    };
+
+    handleChange = (item) => {
+        this.setState({type: item['value']})
     };
 
     render() {
@@ -67,8 +100,12 @@ class ProductPost extends React.Component {
                 Amount
                 <input type="text"  name="amount" value={this.state.amount} onChange={this.setValue} />
                 <hr />
-                Type
-                <input type="text"  name="type" value={this.state.type} onChange={this.setValue} />
+                <label>Type</label>
+                <Select
+                    options={this.state.typeNames}
+                    onChange={this.handleChange}
+                    styles={colourStyles}
+                />
                 <hr />
                 Description
                 <textarea  name="description" value={this.state.description} onChange={this.setValue} />

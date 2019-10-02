@@ -19,6 +19,7 @@ class ProductFromListSchema(Schema):
     id = fields.Integer()
     name = title = fields.String()
     price = fields.Float()
+    new_price = fields.Float()
 
     class Meta:
         """Meta class."""

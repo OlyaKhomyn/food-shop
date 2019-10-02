@@ -29,7 +29,7 @@ class Header extends Component {
                 element3: <Link className="nav-link nav-text" to="/catalog">Catalog</Link>,
                 element4: <Link className="nav-link nav-text" to="/new-type">New Type</Link>,
                 element5: <Link className="nav-link nav-text" to="/new-product">New Product</Link>,
-                element6: <Link className="nav-link nav-text" to="/new-action">New Action</Link>
+                element6: <Link className="nav-link nav-text" to="/new-action">Actions</Link>
             });
         } else if (condition)
         {

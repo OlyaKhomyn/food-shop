@@ -8,6 +8,7 @@ class ProductItem extends Component {
         name: undefined,
         amount: undefined,
         price: undefined,
+        new_price: undefined,
         description: undefined,
         image: undefined,
         to_basket: 1
@@ -22,6 +23,7 @@ class ProductItem extends Component {
                 id: id,
                 name: data.name,
                 price: data.price,
+                new_price: data.new_price,
                 amount: data.amount,
                 description: data.description
             });
@@ -84,6 +86,7 @@ class ProductItem extends Component {
             <ul>
                 <li>Name: {this.state.name}</li>
                 <li>Price: {this.state.price}</li>
+                {this.state.new_price && <li>Discount!! New price: {this.state.new_price}</li>}
                 <li>Left: {this.state.amount}</li>
                 <li>About: {this.state.description}</li>
                 <img src={this.state.image} width='35%' height='35%'/>

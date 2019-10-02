@@ -3,6 +3,17 @@ import axios from 'axios';
 import Select from 'react-select';
 import ActionItem from "./actionItem";
 
+const colourStyles = {
+  control: styles => ({ ...styles, backgroundColor: 'white' }),
+  option: (styles) => {
+    return {
+      ...styles,
+      backgroundColor: '#ff9966'
+    };
+  },
+};
+
+
 class ActionPost extends React.Component {
 
     constructor(props) {
@@ -87,8 +98,9 @@ class ActionPost extends React.Component {
                     Discount value
                     <input type="text"  name="discount" value={this.state.discount} onChange={this.setValue} />
                     <hr />
-                    <label className='title_create_group'>Add types:</label>
+                    <label>Add types:</label>
                                 <Select
+                                    styles={colourStyles}
                                     options={this.state.typeNames}
                                     onChange={this.handleChange}
                                     isMulti

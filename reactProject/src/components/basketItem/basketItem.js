@@ -42,7 +42,7 @@ class BasketItem extends Component {
                     state: {id: this.state.productId}
                 }}
             >
-                <li>Name: {this.state.productName}; Price for one: {this.state.productPrice};
+                <li>Name: {this.state.productName}; Price for one: {this.props.productPrice};
                     Amount: {this.props.amount}; Total price: {this.state.productPrice * this.props.amount};</li>
             </Link>
                 <div>
