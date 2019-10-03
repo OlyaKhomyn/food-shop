@@ -67,13 +67,19 @@ class Order extends React.Component {
                 user_id: this.state.user_id
             }
         };
-        axios.post("http://127.0.0.1/order", data, {withCredentials:true})
-            .then((response) => {
-                this.changeProductsState();
-                alert('Order is successfully made!')
-            }).catch((error, info) => {
+        let valid = data.payment_info.city != undefined && data.payment_info.department != undefined && data.payment_info.phone != undefined;
+        if (valid) {
+            axios.post("http://127.0.0.1/order", data, {withCredentials: true})
+                .then((response) => {
+                    this.changeProductsState();
+                    alert('Order is successfully made!')
+                }).catch((error, info) => {
                 alert('Incorrect data!')
-        });
+            });
+        }
+        else {
+            alert("Input all required fields!")
+        }
     }
     onChange(e) {
         this.setState({[e.target.name]: e.target.value})

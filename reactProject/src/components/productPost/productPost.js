@@ -40,7 +40,8 @@ class ProductPost extends React.Component {
         const config = {
             headers: {
                 'content-type': 'image/png'
-            }
+            },
+            withCredentials: true
         };
 
         axios.post("http://127.0.0.1/product",formData,config)
@@ -50,7 +51,14 @@ class ProductPost extends React.Component {
                 console.log(error.response);
                 if (error.response.data['error'] != undefined)
                 {
-                    alert(error.response.data['error'] + "\nIt must be either .png or .jpg")
+                    if (error.response.data['error'] == "Forbidden.")
+                    {
+                        alert(error.response.data['error'])
+                    }
+                    else
+                    {
+                        alert(error.response.data['error'] + "\nIt must be either .png or .jpg")
+                    }
                 }
                 else {
                     alert("Input all required fields")

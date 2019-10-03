@@ -20,7 +20,6 @@ class Header extends Component {
         let condition = cookie.load("session") != undefined;
         console.log(cookie.load("session"))
         let isAdmin = cookie.load("admin") == "True";
-        console.log(isAdmin);
         if (isAdmin && condition)
         {
             this.setState({

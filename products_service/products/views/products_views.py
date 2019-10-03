@@ -11,20 +11,20 @@ from products.models.product import Product
 from products.serializers.product_schema import ProductSchema, ProductFromListSchema
 
 
-# def check_authority(view):
-#     """Decorator for resources"""
-#     def func_wrapper(*args, **kwargs):
-#         """wrapper"""
-#         if request.cookies['admin'] == 'False' and request.method != 'GET':
-#             return {"error": "Forbidden."}, status.HTTP_403_FORBIDDEN
-#         return view(*args, **kwargs)
-#     return func_wrapper
+def check_authority(view):
+    """Decorator for resources"""
+    def func_wrapper(*args, **kwargs):
+        """wrapper"""
+        if request.cookies['admin'] == 'False' and request.method != 'GET':
+            return {"error": "Forbidden."}, status.HTTP_403_FORBIDDEN
+        return view(*args, **kwargs)
+    return func_wrapper
 
 
 class ProductResource(Resource):
 
     ALLOWED_EXTENSIONS = set(['png', 'jpg'])
-
+    @check_authority
     def get(self, product_id=None):
         if not product_id:
             args = {
@@ -75,6 +75,7 @@ class ProductResource(Resource):
         product = ProductSchema().dump(obj=product).data
         return product, status.HTTP_200_OK
 
+    @check_authority
     def put(self, product_id):
         try:
             product = Product.query.get(product_id)
@@ -94,6 +95,7 @@ class ProductResource(Resource):
             return {"error": "Type does not exist."}, status.HTTP_400_BAD_REQUEST
         return Response(status=status.HTTP_200_OK)
 
+    @check_authority
     def patch(self, product_id):
         try:
             product = Product.query.get(product_id)
@@ -116,10 +118,12 @@ class ProductResource(Resource):
         db.session.commit()
         return Response(status=status.HTTP_200_OK)
 
+    @check_authority
     def allowed_file(self, filename):
         return '.' in filename and \
                filename.rsplit('.', 1)[1].lower() in self.ALLOWED_EXTENSIONS
 
+    @check_authority
     def post(self):
         try:
             keys = set(['name', 'price', 'amount', 'type', 'description'])

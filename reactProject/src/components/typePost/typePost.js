@@ -20,7 +20,8 @@ class TypePost extends React.Component {
         const config = {
             headers: {
                 'content-type': 'image/png'
-            }
+            },
+            withCredentials: true
         };
 
         axios.post("http://127.0.0.1/type",formData,config)

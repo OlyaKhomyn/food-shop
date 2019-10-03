@@ -51,11 +51,18 @@ class ActionPost extends React.Component {
             type_ids: this.state.ids,
             valid_to: this.state.valid_to
         };
-        axios.post("http://127.0.0.1/action",data,{withCredentials: true}).
-        then(() => {
+        let valid = data.discount != undefined && data.type_ids != undefined && data.valid_to != undefined;
+        if (valid) {
+            axios.post("http://127.0.0.1/action", data, {withCredentials: true}).then(() => {
                 this.addDiscountToTypes();
                 alert("The action is successfully uploaded");
-        }).catch((error) => { });
+            }).catch((error) => {
+                console.log(error)
+            });
+        }
+        else {
+            alert("Input all required fields!")
+        }
     }
 
     componentDidMount() {
@@ -113,7 +120,6 @@ class ActionPost extends React.Component {
                 </form>
                 <div>{
                     this.state.actions.map(el => {
-                        console.log(el) ;
                         return <ActionItem key={el['id']} id={el['id']} discount={el['discount']}
                                                                  type_ids={el['type_ids']}
                                                                  valid_to={el['valid_to']} />})

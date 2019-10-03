@@ -9,7 +9,18 @@ from actions.models.action import Action
 from actions.serializers.action_schema import ActionSchema
 
 
+def check_authority(view):
+    """Decorator for resources"""
+    def func_wrapper(*args, **kwargs):
+        """wrapper"""
+        if request.cookies['admin'] == 'False' and request.method != 'GET':
+            return {"error": "Forbidden."}, status.HTTP_403_FORBIDDEN
+        return view(*args, **kwargs)
+    return func_wrapper
+
+
 class ActionResource(Resource):
+    @check_authority
     def get(self, action_id=None):
         if not action_id:
             actions = Action.query.all()
@@ -24,6 +35,7 @@ class ActionResource(Resource):
         action = ActionSchema().dump(obj=action).data
         return action, status.HTTP_200_OK
 
+    @check_authority
     def delete(self, action_id):
         try:
             action = Action.query.get(action_id)
@@ -35,6 +47,7 @@ class ActionResource(Resource):
         db.session.commit()
         return Response(status=status.HTTP_200_OK)
 
+    @check_authority
     def post(self):
         try:
             data = ActionSchema().load(request.json).data

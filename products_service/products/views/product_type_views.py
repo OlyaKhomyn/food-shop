@@ -11,10 +11,21 @@ from products.serializers.product_type_schema import ProductTypeSchema
 from io import BytesIO
 
 
+def check_authority(view):
+    """Decorator for resources"""
+    def func_wrapper(*args, **kwargs):
+        """wrapper"""
+        if request.cookies['admin'] == 'False' and request.method != 'GET':
+            return {"error": "Forbidden."}, status.HTTP_403_FORBIDDEN
+        return view(*args, **kwargs)
+    return func_wrapper
+
+
 class TypeResource(Resource):
 
     ALLOWED_EXTENSIONS = set(['png', 'jpg'])
 
+    @check_authority
     def get(self, type_id=None):
         if not type_id:
             types = Type.query.all()
@@ -40,7 +51,7 @@ class TypeResource(Resource):
         type = ProductTypeSchema().dump(obj=type).data
         return type, status.HTTP_200_OK
 
-
+    @check_authority
     def put(self, type_id):
         try:
             prod_type = Type.query.get(type_id)
@@ -59,6 +70,7 @@ class TypeResource(Resource):
             return {"error": "Such type already exists."}, status.HTTP_400_BAD_REQUEST
         return Response(status=status.HTTP_200_OK)
 
+    @check_authority
     def delete(self, type_id):
         try:
             prod_type = Type.query.get(type_id)
@@ -74,6 +86,7 @@ class TypeResource(Resource):
         return '.' in filename and \
                filename.rsplit('.', 1)[1].lower() in self.ALLOWED_EXTENSIONS
 
+    @check_authority
     def post(self):
         try:
             data = request.form['type']
