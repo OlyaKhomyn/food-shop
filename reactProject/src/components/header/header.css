@@ -1,0 +1,38 @@
+.header {
+    text-decoration: none;
+    color: black;
+}
+
+.navbar {
+    background-color: #ff9966;
+}
+
+.nav-text {
+    text-decoration: none;
+    color: #000;
+    font-size: 25px;
+}
+
+.logo {
+    font-weight: bolder;
+    font-size: 60px;
+    padding: 0 20px 0 20px;
+}
+
+.nav-text:hover {
+    color: #ffeee6;
+    text-decoration: none;
+}
+
+.right-nav-items {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.left-nav-items {
+    display: flex;
+}
+
+.navbar-collapse {
+    justify-content: space-between;
+}

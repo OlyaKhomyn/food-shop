@@ -1,0 +1,37 @@
+version: '2.1'
+services:
+  nginx:
+    image: nginx:latest
+    container_name: production_nginx
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+    ports:
+      - 80:80
+
+  basket-service:
+    image: basket:latest
+    container_name: basket
+
+  actions-service:
+    image: actions:latest
+    container_name: actions
+
+  products-service:
+    image: products:latest
+    container_name: products
+
+  users-service:
+    image: users:latest
+    container_name: users
+
+  db:
+    image: postgres:latest
+    container_name: postgres-docker
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    ports:
+      - 8001:5432
+
+
+volumes:
+  db-data:

@@ -1,0 +1,23 @@
+.main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    text-align: center;
+    height: 500px;
+}
+
+.try_cont {
+    display: flex;
+    justify-content: center;
+    align-self: center;
+    margin-top: 20px;
+}
+
+.try_btn {
+    background-color: #ff9966;
+    color: black;
+    font-size: 40px;
+    border-radius: 20px;
+    width: 300px;
+}
